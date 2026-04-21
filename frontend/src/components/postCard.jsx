@@ -1,13 +1,66 @@
 import { Link } from 'react-router-dom';
-import { Calendar, User, Clock } from 'lucide-react';
+import { Calendar, User, Clock, Pencil, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { postsAPI } from '../api';
+import { toast } from 'react-hot-toast';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onRefresh }) => {
   const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric'
   });
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const newTitle = prompt('Enter new title:', post.title);
+    if (newTitle === null) return; // Cancelled
+
+    const newContent = prompt('Enter new content:', post.content);
+    if (newContent === null) return; // Cancelled
+
+    try {
+      const loadingToast = toast.loading('Updating post...');
+      await postsAPI.update(post._id, { 
+        title: newTitle || post.title, 
+        content: newContent || post.content 
+      });
+      toast.success('Post updated successfully', { id: loadingToast });
+      
+      if (onRefresh) {
+        onRefresh();
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error('Failed to update post');
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
+
+    try {
+      const loadingToast = toast.loading('Deleting post...');
+      await postsAPI.delete(post._id);
+      toast.success('Post deleted successfully', { id: loadingToast });
+      
+      if (onRefresh) {
+        onRefresh();
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error('Failed to delete post');
+      console.error(error);
+    }
+  };
 
   return (
     <motion.div 
@@ -18,6 +71,14 @@ const PostCard = ({ post }) => {
       transition={{ duration: 0.4 }}
       className="post-card"
     >
+      <div className="card-actions">
+        <button onClick={handleEdit} className="action-btn edit" title="Edit Post">
+          <Pencil size={16} />
+        </button>
+        <button onClick={handleDelete} className="action-btn delete" title="Delete Post">
+          <Trash2 size={16} />
+        </button>
+      </div>
       <Link to={`/post/${post._id}`} className="card-link">
         <div className="card-image">
           {/* Placeholder for post image */}
@@ -28,8 +89,6 @@ const PostCard = ({ post }) => {
         <div className="card-content">
           <div className="card-meta">
             <span className="category">Insights</span>
-            <span className="dot">•</span>
-            <span className="read-time">5 min read</span>
           </div>
           <h3 className="card-title">{post.title}</h3>
           <p className="card-excerpt">
@@ -129,6 +188,65 @@ const PostCard = ({ post }) => {
         .post-date {
           font-size: 0.85rem;
           color: var(--text-muted);
+        }
+
+        .post-card {
+          position: relative;
+        }
+
+        .card-actions {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          display: flex;
+          gap: 0.5rem;
+          z-index: 10;
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: all 0.3s ease;
+        }
+
+        .post-card:hover .card-actions {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .action-btn {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(10px);
+        }
+
+        .action-btn.edit {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn.edit:hover {
+          background: var(--accent);
+          border-color: var(--accent);
+          transform: scale(1.1);
+        }
+
+        .action-btn.delete {
+          background: rgba(255, 59, 48, 0.1);
+          color: #ff3b30;
+          border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .action-btn.delete:hover {
+          background: #ff3b30;
+          color: white;
+          transform: scale(1.1);
         }
       `}</style>
     </motion.div>

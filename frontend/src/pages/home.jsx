@@ -69,7 +69,7 @@ const Home = () => {
       ) : filteredPosts.length > 0 ? (
         <div className="posts-grid">
           {filteredPosts.map((post, index) => (
-            <PostCard key={post._id} post={post} />
+            <PostCard key={post._id} post={post} onRefresh={fetchPosts} />
           ))}
         </div>
       ) : (

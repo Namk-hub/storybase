@@ -56,8 +56,6 @@ const PostDetail = () => {
           >
             <div className="post-meta">
               <span className="post-category">INSIGHTS</span>
-              <span className="dot">•</span>
-              <span className="read-time">5 MIN READ</span>
             </div>
             <h1 className="post-title">{post.title}</h1>
             
@@ -68,11 +66,6 @@ const PostDetail = () => {
                   <span className="author-name-large">{post.author?.name || 'Anonymous'}</span>
                   <span className="post-date-large">{formattedDate}</span>
                 </div>
-              </div>
-              
-              <div className="post-actions">
-                <button className="action-btn"><Share2 size={18} /></button>
-                <button className="action-btn"><MoreHorizontal size={18} /></button>
               </div>
             </div>
           </motion.div>

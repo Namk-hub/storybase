@@ -1,13 +1,19 @@
 import Post from '../models/postModel.js';
 
-const createPost=async(req,res)=>{
- const post=await Post.create({
-  title:req.body.title,
-  content:req.body.content,
-  author:req.user.id
- })
- res.json({message:'Post created successfully',post})
-}
+const createPost = async (req, res) => {
+  try {
+    const post = await Post.create({
+      title: req.body.title,
+      content: req.body.content,
+      author: req.user.id,
+    });
+
+    res.json({ message: "Post created successfully", post });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 const getAllPosts=async(req,res) =>{
   const posts=await Post.find().populate('author','name') 
