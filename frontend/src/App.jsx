@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
-import Home from './pages/Home';
+import Home from './pages/home';
 import PostDetail from './pages/PostDetail';
-import CreatePost from './pages/CreatePost';
-import Login from './pages/Login';
+import CreatePost from './pages/createPostreatePost';
+import Login from './pages/loginogin';
 import Signup from './pages/Signup';
 
 function App() {
