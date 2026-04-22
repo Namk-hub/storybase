@@ -10,6 +10,7 @@ const PostDetail = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const fetchPost = async () => {
