@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import PostCard from '../components/PostCard';
+import PostCard from '../components/postCard';
 import { postsAPI } from '../api';
 import { motion } from 'framer-motion';
 import { Search, Filter, Loader2 } from 'lucide-react';
