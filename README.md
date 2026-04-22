@@ -23,22 +23,18 @@ A blogging platform built for practice where users can create, read, update, and
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
+#### Frontend :-
 - React.js
-- Axios
 - React Router
+- Axios
 
-**Backend:**
+#### Backend :-
 - Node.js
 - Express.js
-- MongoDB (Mongoose)
-- CORS
-- dotenv
 
-**Deployment:**
-- Vercel (Frontend)
-- Render (Backend)
-
+#### Database :-
+- MongoDB
+- Mongoose
 
 ---
 
