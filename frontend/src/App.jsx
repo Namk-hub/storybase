@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Home from './pages/home';
 import PostDetail from './pages/PostDetail';
-import CreatePost from './pages/createPostreatePost';
+import CreatePost from './pages/createPost';
 import Login from './pages/loginogin';
 import Signup from './pages/Signup';
 
