@@ -5,7 +5,7 @@ import Landing from './pages/Landing';
 import Home from './pages/home';
 import PostDetail from './pages/PostDetail';
 import CreatePost from './pages/createPost';
-import Login from './pages/loginogin';
+import Login from './pages/login';
 import Signup from './pages/Signup';
 
 function App() {
