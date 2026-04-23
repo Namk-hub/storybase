@@ -19,12 +19,15 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // If we get a 401, it means the token is likely invalid or expired
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data?.message === "Token expired"
+    ) {
       // Clear local storage on auth failure
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      
+
       // Redirect to login if not already there
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
