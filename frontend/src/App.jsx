@@ -43,7 +43,7 @@ function App() {
               path="/"
               element={user ? <Navigate to="/home" /> : <Landing />}
             />
-            <Route path="/home" element={<Home />} />
+            <Route path="/home" element={<Home user={user} />} />
             <Route path="/post/:id" element={<PostDetail />} />
             <Route
               path="/create"

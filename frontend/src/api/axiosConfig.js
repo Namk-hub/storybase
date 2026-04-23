@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://storybase-q754.onrender.com/api',
+  // Dynamically switch between local and production backend
+  baseURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api' 
+    : 'https://storybase-q754.onrender.com/api',
 });
 
 // Request interceptor to add the JWT token to headers
@@ -19,15 +22,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      error.response.data?.message === "Token expired"
-    ) {
+    // If we get a 401, it means the token is likely invalid or expired
+    if (error.response && error.response.status === 401) {
       // Clear local storage on auth failure
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-
+      
       // Redirect to login if not already there
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';

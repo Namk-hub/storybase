@@ -6,7 +6,7 @@ import { Search, Filter, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import Skeleton from '../components/Skeleton';
 
-const Home = () => {
+const Home = ({ user }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,19 +18,25 @@ const Home = () => {
   const fetchPosts = async () => {
     try {
       const response = await postsAPI.getAll();
-      setPosts(response.data.posts);
+      // Safely access the posts array
+      const postsData = response.data?.posts || [];
+      setPosts(postsData);
     } catch (error) {
       toast.error('Failed to load posts');
-      console.error(error);
+      console.error('Fetch error:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredPosts = posts.filter(post => 
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.content.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Robust filtering to prevent crashes if title or content is missing
+  const filteredPosts = (posts || []).filter(post => {
+    if (!post) return false;
+    const title = (post.title || '').toLowerCase();
+    const content = (post.content || '').toLowerCase();
+    const search = (searchTerm || '').toLowerCase();
+    return title.includes(search) || content.includes(search);
+  });
 
   return (
     <div className="home-page container">
@@ -68,8 +74,13 @@ const Home = () => {
         </div>
       ) : filteredPosts.length > 0 ? (
         <div className="posts-grid">
-          {filteredPosts.map((post, index) => (
-            <PostCard key={post._id} post={post} onRefresh={fetchPosts} />
+          {filteredPosts.map((post) => (
+            <PostCard 
+              key={post._id} 
+              post={post} 
+              onRefresh={fetchPosts} 
+              currentUser={user} 
+            />
           ))}
         </div>
       ) : (

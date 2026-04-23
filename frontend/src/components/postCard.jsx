@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { postsAPI } from '../api';
 import { toast } from 'react-hot-toast';
 
-const PostCard = ({ post, onRefresh }) => {
+const PostCard = ({ post, onRefresh, currentUser }) => {
+  const isOwner = currentUser?.id === post.author?._id;
   const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -35,7 +36,11 @@ const PostCard = ({ post, onRefresh }) => {
         window.location.reload();
       }
     } catch (error) {
-      toast.error('Failed to update post');
+      if (error.response?.status === 403) {
+        toast.error('You are not authorized to update this post');
+      } else {
+        toast.error('Failed to update post');
+      }
       console.error(error);
     }
   };
@@ -57,7 +62,11 @@ const PostCard = ({ post, onRefresh }) => {
         window.location.reload();
       }
     } catch (error) {
-      toast.error('Failed to delete post');
+      if (error.response?.status === 403) {
+        toast.error('You are not authorized to delete this post');
+      } else {
+        toast.error('Failed to delete post');
+      }
       console.error(error);
     }
   };
@@ -71,14 +80,16 @@ const PostCard = ({ post, onRefresh }) => {
       transition={{ duration: 0.4 }}
       className="post-card"
     >
-      <div className="card-actions">
-        <button onClick={handleEdit} className="action-btn edit" title="Edit Post">
-          <Pencil size={16} />
-        </button>
-        <button onClick={handleDelete} className="action-btn delete" title="Delete Post">
-          <Trash2 size={16} />
-        </button>
-      </div>
+      {isOwner && (
+        <div className="card-actions">
+          <button onClick={handleEdit} className="action-btn edit" title="Edit Post">
+            <Pencil size={16} />
+          </button>
+          <button onClick={handleDelete} className="action-btn delete" title="Delete Post">
+            <Trash2 size={16} />
+          </button>
+        </div>
+      )}
       <Link to={`/post/${post._id}`} className="card-link">
         <div className="card-image">
           {/* Placeholder for post image */}
