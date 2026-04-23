@@ -7,14 +7,23 @@ import PostDetail from './pages/PostDetail';
 import CreatePost from './pages/createPost';
 import Login from './pages/login';
 import Signup from './pages/Signup';
+import { isTokenExpired } from './utils/auth';
 
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const token = localStorage.getItem('token');
+
+    if (savedUser && token) {
+      if (isTokenExpired(token)) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setUser(null);
+      } else {
+        setUser(JSON.parse(savedUser));
+      }
     }
   }, []);
 
@@ -30,15 +39,24 @@ function App() {
         <Navbar user={user} onLogout={handleLogout} />
         <main>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route
+              path="/"
+              element={user ? <Navigate to="/home" /> : <Landing />}
+            />
             <Route path="/home" element={<Home />} />
             <Route path="/post/:id" element={<PostDetail />} />
-            <Route 
-              path="/create" 
-              element={user ? <CreatePost /> : <Navigate to="/login" />} 
+            <Route
+              path="/create"
+              element={user ? <CreatePost /> : <Navigate to="/login" />}
             />
-            <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route path="/signup" element={<Signup setUser={setUser} />} />
+            <Route
+              path="/login"
+              element={user ? <Navigate to="/home" /> : <Login setUser={setUser} />}
+            />
+            <Route
+              path="/signup"
+              element={user ? <Navigate to="/home" /> : <Signup setUser={setUser} />}
+            />
           </Routes>
         </main>
       </div>
