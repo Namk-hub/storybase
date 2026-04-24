@@ -11,9 +11,9 @@ const Landing = () => {
           <div className="blob"></div>
           <div className="blob blob-2"></div>
         </div>
-        
+
         <div className="container hero-content">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -50,19 +50,19 @@ const Landing = () => {
         </div>
 
         <div className="features-grid">
-          <FeatureCard 
-            icon={<Zap size={24} />} 
-            title="Blazing Fast" 
+          <FeatureCard
+            icon={<Zap size={24} />}
+            title="Blazing Fast"
             description="Built with the latest tech for a seamless, instant-loading experience."
           />
-          <FeatureCard 
-            icon={<Shield size={24} />} 
-            title="Distraction Free" 
+          <FeatureCard
+            icon={<Shield size={24} />}
+            title="Distraction Free"
             description="Pure, clean interface that puts your content front and center."
           />
-          <FeatureCard 
-            icon={<Globe size={24} />} 
-            title="Global Reach" 
+          <FeatureCard
+            icon={<Globe size={24} />}
+            title="Global Reach"
             description="Share your ideas with a worldwide audience of high-value readers."
           />
         </div>
