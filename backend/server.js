@@ -4,12 +4,19 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
+import cookieParser from "cookie-parser"
 
-const app=express();
 dotenv.config();
 
-app.use(cors());
+const app = express();
+
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://storybase-frontend.onrender.com'],
+  credentials: true,
+}));
+
 app.use(express.json());
+app.use(cookieParser());
 
 connectDB();
 
@@ -19,9 +26,9 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
   res.send("welcome to storybase backend!")
-})
+});
 
 //routers
 app.use('/api/auth', authRoutes);

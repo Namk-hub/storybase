@@ -107,3 +107,26 @@ button, input, textarea {
 .animate-fade-in {
   animation: fadeIn 0.6s ease forwards;
 }
+
+/* Loading Screen */
+.loading-screen {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--accent-muted);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

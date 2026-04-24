@@ -1,25 +1,22 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authAPI } from '../api';
+import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { LogIn, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Login = ({ setUser }) => {
+const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await authAPI.login(formData);
-      const { token, user, message } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
-      toast.success(message || 'Welcome back!');
+      const data = await login(formData);
+      toast.success(data.message || 'Welcome back!');
       navigate('/home');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed. Please check your credentials.');

@@ -1,25 +1,22 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authAPI } from '../api';
+import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { UserPlus, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Signup = ({ setUser }) => {
+const Signup = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await authAPI.register(formData);
-      const { token, user, message } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
-      toast.success(message || 'Account created successfully!');
+      const data = await register(formData);
+      toast.success(data.message || 'Account created successfully!');
       navigate('/home');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Signup failed. Please try again.');

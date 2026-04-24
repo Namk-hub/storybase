@@ -28,10 +28,6 @@ export const isTokenExpired = (token) => {
 };
 
 /**
- * Checks if the user is currently authenticated with a valid token.
- * @returns {boolean}
+ * Note: isAuthenticated() based on localStorage is deprecated.
+ * Authentication state is now managed via AuthContext and in-memory access token.
  */
-export const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  return !!token && !isTokenExpired(token);
-};
