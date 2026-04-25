@@ -5,6 +5,7 @@ const createPost = async (req, res) => {
     const post = await Post.create({
       title: req.body.title,
       content: req.body.content,
+      image: req.file?.path,
       author: req.user.id,
     });
 

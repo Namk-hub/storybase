@@ -92,10 +92,13 @@ const PostCard = ({ post, onRefresh, currentUser }) => {
       )}
       <Link to={`/post/${post._id}`} className="card-link">
         <div className="card-image">
-          {/* Placeholder for post image */}
-          <div className="image-placeholder">
-            <span>STORYBASE</span>
-          </div>
+          {post.image ? (
+            <img src={post.image} alt={post.title} className="card-img" />
+          ) : (
+            <div className="image-placeholder">
+              <span>STORYBASE</span>
+            </div>
+          )}
         </div>
         <div className="card-content">
           <div className="card-meta">
@@ -126,6 +129,12 @@ const PostCard = ({ post, onRefresh, currentUser }) => {
         .post-card:hover {
           border-color: var(--accent);
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .card-img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          display: block;
         }
         .image-placeholder {
           height: 200px;

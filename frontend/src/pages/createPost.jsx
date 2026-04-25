@@ -7,8 +7,27 @@ import { motion } from 'framer-motion';
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({ title: '', content: '' });
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImage(null);
+    setPreview(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,9 +35,16 @@ const CreatePost = () => {
       return toast.error('Please fill in all fields');
     }
 
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    if (image) {
+      data.append('image', image);
+    }
+
     setLoading(true);
     try {
-      await postsAPI.create(formData);
+      await postsAPI.create(data);
       toast.success('Your story has been published!');
       navigate('/home');
     } catch (error) {
@@ -62,6 +88,30 @@ const CreatePost = () => {
 
         <main className="editor-main">
           <form id="create-post-form" onSubmit={handleSubmit} className="post-form">
+            <div className="image-upload-section">
+              {!preview ? (
+                <label className="image-placeholder glass">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleImageChange}
+                    className="hidden-input"
+                  />
+                  <div className="placeholder-content">
+                    <ImageIcon size={32} />
+                    <span>Add a cover image</span>
+                  </div>
+                </label>
+              ) : (
+                <div className="image-preview-container">
+                  <img src={preview} alt="Preview" className="image-preview" />
+                  <button type="button" className="remove-image-btn" onClick={removeImage}>
+                    <X size={18} />
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="title-input-group">
               <input 
                 type="text" 
@@ -124,6 +174,69 @@ const CreatePost = () => {
         }
 
         .post-form { display: flex; flex-direction: column; gap: 2rem; }
+        
+        .image-upload-section {
+          width: 100%;
+          margin-bottom: 1rem;
+        }
+        .image-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 200px;
+          border-radius: 24px;
+          cursor: pointer;
+          border: 2px dashed var(--border);
+          transition: var(--transition-normal);
+        }
+        .image-placeholder:hover {
+          border-color: var(--accent);
+          background: rgba(255, 255, 255, 0.05);
+        }
+        .placeholder-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+          color: var(--text-secondary);
+        }
+        .hidden-input { display: none; }
+        
+        .image-preview-container {
+          position: relative;
+          width: 100%;
+          height: 400px;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: var(--shadow-lg);
+        }
+        .image-preview {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .remove-image-btn {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          background: rgba(0, 0, 0, 0.6);
+          color: white;
+          border: none;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+          transition: var(--transition-normal);
+        }
+        .remove-image-btn:hover {
+          background: var(--danger);
+          transform: scale(1.1);
+        }
+
         .title-input {
           width: 100%;
           background: none;
@@ -162,6 +275,7 @@ const CreatePost = () => {
           .editor-sidebar { order: 2; }
           .editor-main { order: 1; }
           .title-input { font-size: 2rem; }
+          .image-preview-container { height: 250px; }
         }
       `}</style>
     </div>

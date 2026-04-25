@@ -74,9 +74,12 @@ const PostDetail = () => {
       </header>
 
       <div className="post-body container-narrow">
-        {/* Placeholder hero image */}
         <div className="post-hero-image">
-          <div className="placeholder-overlay">STORYBASE</div>
+          {post.image ? (
+            <img src={post.image} alt={post.title} className="hero-img" />
+          ) : (
+            <div className="placeholder-overlay">STORYBASE</div>
+          )}
         </div>
 
         <motion.div 
@@ -193,6 +196,11 @@ const PostDetail = () => {
           justify-content: center;
           position: relative;
           overflow: hidden;
+        }
+        .hero-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
         .placeholder-overlay {
           font-size: 3rem;
